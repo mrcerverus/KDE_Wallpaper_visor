@@ -102,7 +102,10 @@ class WallpaperItem:
 def wallpaper_dir() -> Path:
     env_dir = os.environ.get("WALLPAPER_PICKER_DIR")
     if env_dir:
-        return Path(env_dir).expanduser()
+        candidate = Path(env_dir).expanduser()
+        if candidate.is_dir():
+            return candidate
+        return candidate
     candidates = [
         Path.home() / "Imágenes" / "Wallpapers",
         Path.home() / "Pictures" / "Wallpapers",
@@ -1493,7 +1496,7 @@ class PickerWindow(QWidget):
         if not path.is_file():
             send_notification(
                 "Fondo de pantalla",
-                f"No se encontró el archivo:\n{path}",
+                "No se encontró el archivo seleccionado.",
                 urgent=True,
             )
             return
@@ -1698,8 +1701,13 @@ class SingleInstance(QObject):
                 self._read(connection)
 
     def _read(self, connection: QLocalSocket) -> None:
-        data = bytes(connection.readAll())
-        if b"show" in data and self.window is not None:
+        try:
+            data = bytes(connection.readAll())
+        except OSError:
+            return
+        if len(data) > 64:
+            return
+        if data.strip() == b"show" and self.window is not None:
             self.window.show_picker()
 
 
