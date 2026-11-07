@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Selector de fondos
+Name[en]=Wallpaper Picker
+GenericName=Selector de fondos de pantalla
+Comment=Elige un fondo de pantalla de tu carpeta de wallpapers
+Exec=/home/mrcerverus/.local/bin/wallpaper-picker
+Icon=preferences-desktop-wallpaper
+Terminal=false
+Categories=Graphics;
+Keywords=wallpaper;wallpapers;fondo;fondos;pantalla;
+StartupNotify=true
+StartupWMClass=wallpaper-picker
